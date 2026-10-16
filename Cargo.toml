@@ -1,5 +1,5 @@
 [package]
-name = "tess"
+name = "tessera-lang"
 version = "1.0.0"
 edition = "2024"
 rust-version = "1.85"
