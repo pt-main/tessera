@@ -1,7 +1,25 @@
 [package]
-name = "tessera"
+name = "tess"
 version = "1.0.0"
 edition = "2024"
+rust-version = "1.85"
+license = "Apache-2.0"
+readme = "README.md"
+description = "A simple, portable, strictly typed data storage language with extreme parsing speed."
+authors = ["Pt Main <pt.main.acc@gmail.com>"]
+
+keywords = ["parser", "config", "database", "text", "typed"]
+
+categories = ["parser-implementations", "config", "data-structures"]
+
+repository = "https://github.com/pt-main/tessera"
+homepage = "https://github.com/pt-main/tessera"
+
+exclude = [
+    "/src/main.rs",
+    "/docs/*",
+    "/target/*"
+]
 
 [dependencies]
 base64 = "0.23.1"
@@ -14,7 +32,6 @@ unescape_zero_copy = "2.4.0"
 [lib]
 name = "tessera" 
 path = "src/lib/mod.rs"
-
 
 [profile.release]
 opt-level = 3
