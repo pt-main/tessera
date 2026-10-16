@@ -78,7 +78,8 @@ On a synthetic file of 100,000 nested blocks (about 1 million lines), it achieve
 - ~120 MB/s on complex nested structures.
 
 At the same time, the format can be optimized almost to the limit of hardware performance, and the reference implementation in Rust is not the performance benchmark.
-A C version of the parser is currently in development, already capable of delivering up to 2.5 GB/s on the same device.
+
+> In the [C version](impl/c) under development, however, the speed reaches 4.7 GB/s (on the same 10-year-old hardware).
 
 ## Usage
 

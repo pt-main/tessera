@@ -97,7 +97,7 @@ checksum = "07230ecd51100c2a4ed1d3795dcbcd15ec87af7c97107e52907a9e4142c4bfee"
 
 [[package]]
 name = "tessera-lang"
-version = "1.0.0"
+version = "1.1.0"
 dependencies = [
  "base64",
  "compact_str",
