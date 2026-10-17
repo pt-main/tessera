@@ -1,5 +1,7 @@
 # Tessera
 
+> [Rust](src/lib/) (reference) | [C](impl/c/) (fast) | [Lua](impl/tessera.lua) | [Go](impl/go/)
+
 Tessera is a simple portable language for data storage.  
 Its main advantage is simplicity. The entire parser and data structure fit in 200 lines of Rust.  
 At the same time, speed reaches 160 MB/s at peak and about 120 MB/s on complex nested structures.
@@ -77,9 +79,10 @@ On a synthetic file of 100,000 nested blocks (about 1 million lines), it achieve
 - ~160 MB/s on simple data,
 - ~120 MB/s on complex nested structures.
 
-At the same time, the format can be optimized almost to the limit of hardware performance, and the reference implementation in Rust is not the performance benchmark.
+At the same time, the format can be optimized almost to the limit of hardware performance, and the reference implementation in Rust is not a performance reference.
 
-> In the [C version](impl/c) under development, however, the speed reaches 4.7 GB/s (on the same 10-year-old hardware).
+> In the [C version](impl/c) under development, however, speed reaches 4.7 GB/s (on the same 10-year-old hardware).
+> The [Lua version](impl/tessera.lua) has a speed of ~6 MB/s, and the [Go version](impl/go) is about 80 MB/s.
 
 ## Usage
 

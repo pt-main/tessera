@@ -302,3 +302,143 @@ iter 28:    5.138 ms   4325.2 MiB/s  err=0  entries=1
 iter 29:    5.797 ms   3833.1 MiB/s  err=0  entries=1
 BEST: 4724.6 MiB/s  (threads=8)
 tim-macbookpro% 
+
+
+tim-macbookpro% bash bench.sh
+-------===== MIXED =====-------
+file=bench_mixed.tess  size=27.1 MiB  threads=8  physical_cores=4  avx2=1  merge=1  entry=24
+pre-scan: 10.898 ms  splits=8
+iter  0:   18.224 ms   1488.5 MiB/s  err=0  entries=1000000
+iter  1:   11.812 ms   2296.4 MiB/s  err=0  entries=1000000
+iter  2:   11.143 ms   2434.5 MiB/s  err=0  entries=1000000
+iter  3:   10.289 ms   2636.3 MiB/s  err=0  entries=1000000
+iter  4:   11.765 ms   2305.7 MiB/s  err=0  entries=1000000
+iter  5:   11.042 ms   2456.7 MiB/s  err=0  entries=1000000
+iter  6:   11.260 ms   2409.1 MiB/s  err=0  entries=1000000
+iter  7:   11.976 ms   2265.0 MiB/s  err=0  entries=1000000
+iter  8:   12.443 ms   2180.1 MiB/s  err=0  entries=1000000
+iter  9:   10.682 ms   2539.4 MiB/s  err=0  entries=1000000
+iter 10:   14.477 ms   1873.8 MiB/s  err=0  entries=1000000
+iter 11:   13.023 ms   2083.0 MiB/s  err=0  entries=1000000
+iter 12:    9.303 ms   2915.8 MiB/s  err=0  entries=1000000
+iter 13:   11.979 ms   2264.4 MiB/s  err=0  entries=1000000
+iter 14:   11.702 ms   2318.0 MiB/s  err=0  entries=1000000
+iter 15:    8.985 ms   3019.0 MiB/s  err=0  entries=1000000
+iter 16:   11.312 ms   2398.1 MiB/s  err=0  entries=1000000
+iter 17:   12.470 ms   2175.2 MiB/s  err=0  entries=1000000
+iter 18:   12.575 ms   2157.1 MiB/s  err=0  entries=1000000
+iter 19:   12.439 ms   2180.8 MiB/s  err=0  entries=1000000
+iter 20:   13.066 ms   2076.1 MiB/s  err=0  entries=1000000
+iter 21:   12.206 ms   2222.4 MiB/s  err=0  entries=1000000
+iter 22:   12.897 ms   2103.3 MiB/s  err=0  entries=1000000
+iter 23:   10.634 ms   2550.9 MiB/s  err=0  entries=1000000
+iter 24:   11.701 ms   2318.3 MiB/s  err=0  entries=1000000
+iter 25:   12.672 ms   2140.6 MiB/s  err=0  entries=1000000
+iter 26:   12.126 ms   2237.1 MiB/s  err=0  entries=1000000
+iter 27:   11.656 ms   2327.2 MiB/s  err=0  entries=1000000
+iter 28:   14.093 ms   1924.8 MiB/s  err=0  entries=1000000
+iter 29:   12.662 ms   2142.3 MiB/s  err=0  entries=1000000
+BEST: 3019.0 MiB/s  (threads=8)
+-------===== B64 =====-------
+file=bench_b64.tess  size=95.3 MiB  threads=8  physical_cores=4  avx2=1  merge=1  entry=24
+pre-scan: 19.266 ms  splits=8
+iter  0:   65.427 ms   1456.0 MiB/s  err=0  entries=1000000
+iter  1:   55.560 ms   1714.6 MiB/s  err=0  entries=1000000
+iter  2:   49.517 ms   1923.8 MiB/s  err=0  entries=1000000
+iter  3:   63.233 ms   1506.5 MiB/s  err=0  entries=1000000
+iter  4:   52.572 ms   1812.0 MiB/s  err=0  entries=1000000
+iter  5:   48.305 ms   1972.1 MiB/s  err=0  entries=1000000
+iter  6:   60.172 ms   1583.1 MiB/s  err=0  entries=1000000
+iter  7:   58.837 ms   1619.1 MiB/s  err=0  entries=1000000
+iter  8:   50.825 ms   1874.3 MiB/s  err=0  entries=1000000
+iter  9:   50.621 ms   1881.8 MiB/s  err=0  entries=1000000
+iter 10:   52.997 ms   1797.5 MiB/s  err=0  entries=1000000
+iter 11:   53.768 ms   1771.7 MiB/s  err=0  entries=1000000
+iter 12:   50.626 ms   1881.7 MiB/s  err=0  entries=1000000
+iter 13:   49.802 ms   1912.8 MiB/s  err=0  entries=1000000
+iter 14:   44.060 ms   2162.1 MiB/s  err=0  entries=1000000
+iter 15:   48.964 ms   1945.5 MiB/s  err=0  entries=1000000
+iter 16:   42.903 ms   2220.4 MiB/s  err=0  entries=1000000
+iter 17:   42.727 ms   2229.5 MiB/s  err=0  entries=1000000
+iter 18:   48.173 ms   1977.5 MiB/s  err=0  entries=1000000
+iter 19:   44.090 ms   2160.6 MiB/s  err=0  entries=1000000
+iter 20:   44.282 ms   2151.3 MiB/s  err=0  entries=1000000
+iter 21:   45.461 ms   2095.4 MiB/s  err=0  entries=1000000
+iter 22:   49.209 ms   1935.9 MiB/s  err=0  entries=1000000
+iter 23:   52.018 ms   1831.3 MiB/s  err=0  entries=1000000
+iter 24:   48.140 ms   1978.9 MiB/s  err=0  entries=1000000
+iter 25:   48.652 ms   1958.0 MiB/s  err=0  entries=1000000
+iter 26:   42.798 ms   2225.9 MiB/s  err=0  entries=1000000
+iter 27:   44.025 ms   2163.8 MiB/s  err=0  entries=1000000
+iter 28:   46.986 ms   2027.4 MiB/s  err=0  entries=1000000
+iter 29:   46.048 ms   2068.7 MiB/s  err=0  entries=1000000
+BEST: 2229.5 MiB/s  (threads=8)
+-------===== FLAT =====-------
+file=bench_flat.tess  size=22.2 MiB  threads=8  physical_cores=4  avx2=1  merge=1  entry=24
+pre-scan: 9.904 ms  splits=8
+iter  0:   13.907 ms   1596.2 MiB/s  err=0  entries=1000000
+iter  1:    6.642 ms   3342.4 MiB/s  err=0  entries=1000000
+iter  2:    6.845 ms   3243.0 MiB/s  err=0  entries=1000000
+iter  3:    6.949 ms   3194.4 MiB/s  err=0  entries=1000000
+iter  4:    7.542 ms   2943.5 MiB/s  err=0  entries=1000000
+iter  5:   10.455 ms   2123.3 MiB/s  err=0  entries=1000000
+iter  6:    7.459 ms   2976.2 MiB/s  err=0  entries=1000000
+iter  7:    9.753 ms   2276.1 MiB/s  err=0  entries=1000000
+iter  8:    5.878 ms   3776.4 MiB/s  err=0  entries=1000000
+iter  9:    7.775 ms   2855.0 MiB/s  err=0  entries=1000000
+iter 10:    8.148 ms   2724.5 MiB/s  err=0  entries=1000000
+iter 11:    7.500 ms   2959.7 MiB/s  err=0  entries=1000000
+iter 12:    7.656 ms   2899.5 MiB/s  err=0  entries=1000000
+iter 13:    7.421 ms   2991.5 MiB/s  err=0  entries=1000000
+iter 14:    9.277 ms   2392.9 MiB/s  err=0  entries=1000000
+iter 15:    7.219 ms   3075.0 MiB/s  err=0  entries=1000000
+iter 16:    6.809 ms   3260.4 MiB/s  err=0  entries=1000000
+iter 17:    7.496 ms   2961.6 MiB/s  err=0  entries=1000000
+iter 18:    7.314 ms   3035.2 MiB/s  err=0  entries=1000000
+iter 19:    7.388 ms   3004.7 MiB/s  err=0  entries=1000000
+iter 20:    7.582 ms   2927.8 MiB/s  err=0  entries=1000000
+iter 21:    7.992 ms   2777.8 MiB/s  err=0  entries=1000000
+iter 22:    5.537 ms   4009.5 MiB/s  err=0  entries=1000000
+iter 23:    8.696 ms   2552.8 MiB/s  err=0  entries=1000000
+iter 24:    7.757 ms   2861.6 MiB/s  err=0  entries=1000000
+iter 25:    9.056 ms   2451.3 MiB/s  err=0  entries=1000000
+iter 26:    7.949 ms   2792.8 MiB/s  err=0  entries=1000000
+iter 27:    8.165 ms   2718.8 MiB/s  err=0  entries=1000000
+iter 28:    7.272 ms   3052.8 MiB/s  err=0  entries=1000000
+iter 29:    7.632 ms   2908.5 MiB/s  err=0  entries=1000000
+BEST: 4009.5 MiB/s  (threads=8)
+-------===== NESTED =====-------
+file=bench_nested.tess  size=22.2 MiB  threads=8  physical_cores=4  avx2=1  merge=1  entry=24
+pre-scan: 13.012 ms  splits=4
+iter  0:    9.058 ms   2453.3 MiB/s  err=0  entries=1
+iter  1:    5.253 ms   4230.0 MiB/s  err=0  entries=1
+iter  2:    4.928 ms   4509.0 MiB/s  err=0  entries=1
+iter  3:    4.890 ms   4544.4 MiB/s  err=0  entries=1
+iter  4:    5.909 ms   3760.9 MiB/s  err=0  entries=1
+iter  5:    5.513 ms   4030.9 MiB/s  err=0  entries=1
+iter  6:    6.560 ms   3387.4 MiB/s  err=0  entries=1
+iter  7:    5.519 ms   4026.2 MiB/s  err=0  entries=1
+iter  8:    5.826 ms   3814.0 MiB/s  err=0  entries=1
+iter  9:    6.098 ms   3644.3 MiB/s  err=0  entries=1
+iter 10:    6.209 ms   3579.2 MiB/s  err=0  entries=1
+iter 11:    6.970 ms   3188.2 MiB/s  err=0  entries=1
+iter 12:    5.425 ms   4096.1 MiB/s  err=0  entries=1
+iter 13:    6.888 ms   3226.0 MiB/s  err=0  entries=1
+iter 14:    5.659 ms   3926.8 MiB/s  err=0  entries=1
+iter 15:    7.081 ms   3138.4 MiB/s  err=0  entries=1
+iter 16:    6.652 ms   3340.4 MiB/s  err=0  entries=1
+iter 17:    6.805 ms   3265.7 MiB/s  err=0  entries=1
+iter 18:    6.513 ms   3411.8 MiB/s  err=0  entries=1
+iter 19:    5.097 ms   4359.6 MiB/s  err=0  entries=1
+iter 20:    6.168 ms   3603.1 MiB/s  err=0  entries=1
+iter 21:    5.890 ms   3772.9 MiB/s  err=0  entries=1
+iter 22:    4.756 ms   4672.7 MiB/s  err=0  entries=1
+iter 23:    5.446 ms   4080.6 MiB/s  err=0  entries=1
+iter 24:    6.053 ms   3671.3 MiB/s  err=0  entries=1
+iter 25:    5.018 ms   4428.2 MiB/s  err=0  entries=1
+iter 26:    6.314 ms   3519.6 MiB/s  err=0  entries=1
+iter 27:    5.745 ms   3868.2 MiB/s  err=0  entries=1
+iter 28:    5.405 ms   4111.1 MiB/s  err=0  entries=1
+iter 29:    5.250 ms   4232.8 MiB/s  err=0  entries=1
+BEST: 4672.7 MiB/s  (threads=8)
+tim-macbookpro% 
