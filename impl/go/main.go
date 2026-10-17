@@ -1,9 +1,8 @@
 // Package tessera implements the Tessera v1 data format.
 //
-// Storage layout: each Config is a single map, key -> *Slot. A Slot holds
-// all typed values for that key at once (i, f, s, b, l, inners). This is
-// equivalent to the spec's "one key can reside in several type tables"
-// while keeping a single hash lookup per access.
+// Storage mirrors the spec: six typed maps per Config plus a nested-config
+// map. Maps are lazily allocated. Reads on a nil map return zero, false.
+// A key may exist in several maps at once, as the spec requires.
 package tessera
 
 import (
@@ -12,7 +11,6 @@ import (
 	"strings"
 )
 
-// ErrKind identifies a parse error category.
 type ErrKind int
 
 const (
@@ -27,31 +25,18 @@ const (
 	UnknownType
 )
 
+var errNames = [...]string{
+	"MissingName", "CantPopStack", "MissingParts", "InvalidInt",
+	"InvalidFloat", "InvalidBool", "BadEscape", "BadBase64", "UnknownType",
+}
+
 func (e ErrKind) String() string {
-	switch e {
-	case MissingName:
-		return "MissingName"
-	case CantPopStack:
-		return "CantPopStack"
-	case MissingParts:
-		return "MissingParts"
-	case InvalidInt:
-		return "InvalidInt"
-	case InvalidFloat:
-		return "InvalidFloat"
-	case InvalidBool:
-		return "InvalidBool"
-	case BadEscape:
-		return "BadEscape"
-	case BadBase64:
-		return "BadBase64"
-	case UnknownType:
-		return "UnknownType"
+	if int(e) < len(errNames) {
+		return errNames[e]
 	}
 	return "Unknown"
 }
 
-// ParseError pairs an error kind with the 1-based source line.
 type ParseError struct {
 	Line int
 	Kind ErrKind
@@ -61,80 +46,17 @@ func (e ParseError) Error() string {
 	return "line " + strconv.Itoa(e.Line) + ": " + e.Kind.String()
 }
 
-// Slot holds every typed value that may exist for a key.
-// Has* flags report presence; a key may hold several types at once.
-type Slot struct {
-	I      int64
-	F      float64
-	S      string
-	B      []byte
-	L      bool
-	Inners *Config
-
-	HasI, HasF, HasS, HasB, HasL bool
-}
-
 // Config is a Tessera table.
 type Config struct {
-	Slots map[string]*Slot
+	Ints     map[string]int64
+	Strs     map[string]string
+	Floats   map[string]float64
+	Bytes    map[string][]byte
+	Logicals map[string]bool
+	Inners   map[string]*Config
 }
 
-func NewConfig() *Config {
-	return &Config{Slots: make(map[string]*Slot)}
-}
-
-// Slot returns the slot for key, or nil if absent.
-func (c *Config) Slot(key string) *Slot { return c.Slots[key] }
-
-func (c *Config) Int(key string) (int64, bool) {
-	s := c.Slots[key]
-	if s == nil || !s.HasI {
-		return 0, false
-	}
-	return s.I, true
-}
-
-func (c *Config) Float(key string) (float64, bool) {
-	s := c.Slots[key]
-	if s == nil || !s.HasF {
-		return 0, false
-	}
-	return s.F, true
-}
-
-func (c *Config) Str(key string) (string, bool) {
-	s := c.Slots[key]
-	if s == nil || !s.HasS {
-		return "", false
-	}
-	return s.S, true
-}
-
-func (c *Config) Bytes(key string) ([]byte, bool) {
-	s := c.Slots[key]
-	if s == nil || !s.HasB {
-		return nil, false
-	}
-	return s.B, true
-}
-
-func (c *Config) Bool(key string) (bool, bool) {
-	s := c.Slots[key]
-	if s == nil || !s.HasL {
-		return false, false
-	}
-	return s.L, true
-}
-
-func (c *Config) Inner(key string) *Config {
-	s := c.Slots[key]
-	if s == nil {
-		return nil
-	}
-	return s.Inners
-}
-
-// isWS matches Rust u8::is_ascii_whitespace: space, tab, LF, CR, form feed.
+// isWS matches Rust u8::is_ascii_whitespace.
 func isWS(b byte) bool {
 	return b == ' ' || b == '\t' || b == '\n' || b == '\r' || b == '\x0C'
 }
@@ -154,7 +76,7 @@ func trimASCII(s string) string {
 
 func unescape(s string) (string, ErrKind) {
 	if strings.IndexByte(s, '\\') < 0 {
-		return s, 0 // fast path: nothing to unescape
+		return s, 0 // fast path
 	}
 	var b strings.Builder
 	b.Grow(len(s))
@@ -217,21 +139,12 @@ func unescape(s string) (string, ErrKind) {
 	return b.String(), 0
 }
 
-func getOrCreate(c *Config, key string) *Slot {
-	s := c.Slots[key]
-	if s == nil {
-		s = &Slot{}
-		c.Slots[key] = s
-	}
-	return s
-}
-
 // Parse consumes src and returns the root Config plus any parse errors.
-// Errors do not stop parsing; offending fields or blocks are simply
-// not recorded and parsing continues.
+// Errors do not abort parsing; a bad field is simply not recorded and
+// parsing continues on the next line.
 func Parse(src string) (*Config, []ParseError) {
 	var errors []ParseError
-	root := NewConfig()
+	root := &Config{}
 	stack := []*Config{root}
 	lineno := 0
 
@@ -265,9 +178,11 @@ func Parse(src string) (*Config, []ParseError) {
 				continue
 			}
 			parent := stack[len(stack)-1]
-			slot := getOrCreate(parent, name)
-			child := NewConfig()
-			slot.Inners = child // overwrite per spec
+			if parent.Inners == nil {
+				parent.Inners = make(map[string]*Config)
+			}
+			child := &Config{}
+			parent.Inners[name] = child
 			stack = append(stack, child)
 			continue
 		}
@@ -285,7 +200,7 @@ func Parse(src string) (*Config, []ParseError) {
 			continue
 		}
 
-		// Field: splitn(3, ' ')
+		// splitn(3, ' ')
 		p1 := strings.IndexByte(line, ' ')
 		if p1 < 0 {
 			addErr(MissingParts)
@@ -301,6 +216,7 @@ func Parse(src string) (*Config, []ParseError) {
 		vtype := line[p1+1 : p2]
 		value := line[p2+1:]
 
+		cur := stack[len(stack)-1]
 		switch vtype {
 		case "i":
 			n, err := strconv.ParseInt(value, 10, 64)
@@ -308,11 +224,13 @@ func Parse(src string) (*Config, []ParseError) {
 				addErr(InvalidInt)
 				continue
 			}
-			s := getOrCreate(stack[len(stack)-1], key)
-			s.I, s.HasI = n, true
+			if cur.Ints == nil {
+				cur.Ints = make(map[string]int64)
+			}
+			cur.Ints[key] = n
 
 		case "f":
-			// Rust f64::from_str rejects hex; Go accepts it. Reject it here.
+			// Rust f64::from_str rejects hex; Go accepts it. Reject here.
 			if strings.IndexAny(value, "xX") >= 0 {
 				addErr(InvalidFloat)
 				continue
@@ -322,8 +240,10 @@ func Parse(src string) (*Config, []ParseError) {
 				addErr(InvalidFloat)
 				continue
 			}
-			s := getOrCreate(stack[len(stack)-1], key)
-			s.F, s.HasF = n, true
+			if cur.Floats == nil {
+				cur.Floats = make(map[string]float64)
+			}
+			cur.Floats[key] = n
 
 		case "s":
 			v := value
@@ -335,8 +255,10 @@ func Parse(src string) (*Config, []ParseError) {
 				addErr(kind)
 				continue
 			}
-			s := getOrCreate(stack[len(stack)-1], key)
-			s.S, s.HasS = str, true
+			if cur.Strs == nil {
+				cur.Strs = make(map[string]string)
+			}
+			cur.Strs[key] = str
 
 		case "b":
 			b, err := base64.StdEncoding.DecodeString(value)
@@ -344,8 +266,10 @@ func Parse(src string) (*Config, []ParseError) {
 				addErr(BadBase64)
 				continue
 			}
-			s := getOrCreate(stack[len(stack)-1], key)
-			s.B, s.HasB = b, true
+			if cur.Bytes == nil {
+				cur.Bytes = make(map[string][]byte)
+			}
+			cur.Bytes[key] = b
 
 		case "l":
 			v := trimASCII(value)
@@ -359,8 +283,10 @@ func Parse(src string) (*Config, []ParseError) {
 				addErr(InvalidBool)
 				continue
 			}
-			s := getOrCreate(stack[len(stack)-1], key)
-			s.L, s.HasL = b, true
+			if cur.Logicals == nil {
+				cur.Logicals = make(map[string]bool)
+			}
+			cur.Logicals[key] = b
 
 		default:
 			addErr(UnknownType)
